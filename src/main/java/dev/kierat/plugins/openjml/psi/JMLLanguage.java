@@ -1,24 +1,23 @@
 package dev.kierat.plugins.openjml.psi;
 
 import com.intellij.lang.Language;
+import com.intellij.lang.java.JavaLanguage;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Locale;
 
 
 public class JMLLanguage extends Language {
 
-  public static final JMLLanguage INSTANCE = new JMLLanguage();
+    public static final JMLLanguage INSTANCE = new JMLLanguage();
 
-  public static final String ID = "JML";
-  public static final String SOURCE_ROOT_NAME = ID.toLowerCase(Locale.ROOT);
+    public static final String ID = "JML";
 
-  protected JMLLanguage() {
-    super(ID);
-  }
+    protected JMLLanguage() {
+        super(JavaLanguage.INSTANCE, ID);
+    }
 
-  @Override
-  public @NotNull String getDisplayName() {
-    return ID;
-  }
+    @Override
+    public @NotNull String getDisplayName() {
+        return ID;
+    }
+
 }

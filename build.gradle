@@ -7,13 +7,18 @@ group 'dev.kierat.plugins'
 version '0.1'
 
 repositories {
+    mavenLocal()
     mavenCentral()
 }
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+        languageVersion = JavaLanguageVersion.of(21)
     }
+}
+
+dependencies {
+    implementation 'dev.kierat.plugins:jml-generator:1.0-SNAPSHOT'
 }
 
 intellij {
@@ -26,4 +31,11 @@ intellij {
 
 patchPluginXml {
 //    changeNotes = '''Initial walking skeleton for OpenJML IntelliJ plugin.'''
+}
+
+tasks.withType(Jar).configureEach {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
 }

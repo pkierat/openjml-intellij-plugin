@@ -1,165 +1,76 @@
 <idea-plugin allow-bundled-update="true">
-  <id>openjml</id>
-  <name>OpenJML</name>
-  <category>Languages</category>
-  <description><![CDATA[
+    <id>openjml</id>
+    <name>OpenJML</name>
+    <category>Languages</category>
+    <description><![CDATA[
   ]]>
-  </description>
-  <depends>com.intellij.modules.xml</depends>
-<!--  <depends>com.intellij.modules.spellchecker</depends>-->
-  <depends>org.intellij.intelliLang</depends>
-<!--  <depends>com.intellij.modules.regexp</depends>-->
-  <resource-bundle>messages.OpenJMLBundle</resource-bundle>
-  <vendor>Pawel Kierat</vendor>
+    </description>
+    <depends>com.intellij.modules.xml</depends>
+    <!--  <depends>com.intellij.modules.spellchecker</depends>-->
+    <depends>org.intellij.intelliLang</depends>
+    <!--  <depends>com.intellij.modules.regexp</depends>-->
+    <resource-bundle>messages.OpenJMLBundle</resource-bundle>
+    <vendor>Pawel Kierat</vendor>
 
-  <idea-version since-build="243" until-build="251.*"/>
+    <idea-version since-build="243" until-build="251.*"/>
 
-  <extensions defaultExtensionNs="com.intellij">
-    <fileType
-      name="JML"
-      implementationClass="dev.kierat.plugins.openjml.psi.JMLFileType"
-      fieldName="INSTANCE"
-      language="JML"
-      extensions="jml"/>
-<!--
-    <lang.syntaxHighlighterFactory
-      language="JML"
-      implementationClass="dev.kierat.plugins.openjml.psi.JMLSyntaxHighlighterFactory"/>
-    <lang.parserDefinition
-      language="JML"
-      implementationClass="dev.kierat.plugins.openjml.psi.JMLParserDefinition"/>
-    <lang.commenter
-      language="JML"
-      implementationClass="dev.kierat.plugins.openjml.psi.JMLCommenter"/>
-    <lang.psiStructureViewFactory
-      language="JML"
-      implementationClass="dev.kierat.plugins.openjml.psi.structure.JMLStructureViewFactory"/>
-    <lang.formatter
-      language="JML"
-      implementationClass="dev.kierat.plugins.openjml.psi.formatter.JMLFormattingModelBuilder"/>
-    <annotator
-      language="JML"
-      implementationClass="dev.kierat.plugins.openjml.psi.annotator.JMLAnnotator"/>
-    <lang.foldingBuilder
-      language="JML"
-      implementationClass="dev.kierat.plugins.openjml.psi.JMLFoldingBuilder"/>
-    <langCodeStyleSettingsProvider
-      implementation="dev.kierat.plugins.openjml.psi.formatter.JMLLanguageCodeStyleSettingsProvider"/>
-    <codeStyleSettingsProvider
-      implementation="dev.kierat.plugins.openjml.psi.formatter.JMLCodeStyleSettingsProvider"/>
-    <lang.findUsagesProvider
-      language="JML"
-      implementationClass="dev.kierat.plugins.openjml.psi.JMLFindUsagesProvider"/>
-    <colorSettingsPage
-      implementation="dev.kierat.plugins.openjml.psi.JMLColorsPage"/>
-    <psi.referenceContributor
-      language="JML"
-      implementation="dev.kierat.plugins.openjml.steps.reference.OpenJMLReferenceContributor"/>
--->
+    <extensions defaultExtensionNs="com.intellij">
+        <fileType
+                name="JML"
+                implementationClass="dev.kierat.plugins.openjml.psi.JMLFileType"
+                fieldName="INSTANCE"
+                language="JML"
+                extensions="jml"/>
 
-<!--    <localInspection language="JML" shortName="CucumberUndefinedStep" bundle="messages.OpenJMLBundle"
-                     key="openjml.inspection.undefined.step.name" groupKey="openjml.inspection.group.name" enabledByDefault="true"
-                     level="WARNING"
-                     implementationClass="dev.kierat.plugins.openjml.inspections.CucumberStepInspection"/>
+        <lang.parserDefinition language="JML"
+                               implementationClass="dev.kierat.plugins.openjml.psi.JMLParserDefinition"/>
 
-    <localInspection language="JML" shortName="CucumberExamplesColon" bundle="messages.CucumberBundle"
-                     key="inspection.missed.colon.example.name" groupKey="openjml.inspection.group.name" enabledByDefault="true"
-                     level="ERROR" implementationClass="dev.kierat.plugins.openjml.inspections.CucumberExamplesColonInspection"/>
+        <contentFolderType id="jml"
+                           name="JML Specification Root"
+                           isTestSource="false"
+                           icon="/org/openjml/icons/openjml.png"
+                           moduleSourceRootType="org.jetbrains.jps.model.java.JavaSourceRootType"/>
 
-    <localInspection language="JML" shortName="CucumberMissedExamples" bundle="messages.CucumberBundle"
-                     key="inspection.missed.example.name" groupKey="openjml.inspection.group.name" enabledByDefault="true" level="ERROR"
-                     implementationClass="dev.kierat.plugins.openjml.inspections.CucumberMissedExamplesInspection"/>
+        <applicationConfigurable
+                id="openjml.settings"
+                displayName="OpenJML"
+                instance="dev.kierat.plugins.openjml.settings.OpenJMLSettingsConfigurable"/>
 
-    <localInspection language="JML" shortName="CucumberTableInspection" bundle="messages.CucumberBundle"
-                     key="inspection.table.name" groupKey="openjml.inspection.group.name" enabledByDefault="true"
-                     editorAttributes="NOT_USED_ELEMENT_ATTRIBUTES"
-                     level="WARNING" implementationClass="dev.kierat.plugins.openjml.inspections.CucumberTableInspection"/>
+        <gotoRelatedProvider implementation="dev.kierat.plugins.openjml.navigation.GotoJmlRelatedProvider"/>
 
-    <localInspection language="JML" shortName="GherkinBrokenTableInspection" bundle="messages.CucumberBundle"
-                     key="inspection.gherkin.table.is.broken.name" groupKey="openjml.inspection.group.name" enabledByDefault="true"
-                     level="ERROR" implementationClass="dev.kierat.plugins.openjml.inspections.GherkinBrokenTableInspection"/>
+        <annotator language="JAVA" implementationClass="dev.kierat.plugins.openjml.annotator.JMLAnnotator"/>
+        <annotator language="JML" implementationClass="dev.kierat.plugins.openjml.annotator.JMLAnnotator"/>
 
-    <localInspection language="JML" shortName="GherkinMisplacedBackground" bundle="messages.CucumberBundle"
-                     key="inspection.gherkin.background.after.scenario.name" groupKey="openjml.inspection.group.name"
-                     enabledByDefault="true"
-                     level="ERROR" implementationClass="dev.kierat.plugins.openjml.inspections.GherkinMisplacedBackgroundInspection"/>
+        <highlightVisitor language="JML"
+                          implementationClass="dev.kierat.plugins.openjml.inspection.JMLHighlightVisitor"/>
 
-    <localInspection language="JML" shortName="GherkinScenarioToScenarioOutline" bundle="messages.CucumberBundle"
-                     key="inspection.gherkin.scenario.with.examples.section.name" groupKey="openjml.inspection.group.name"
-                     enabledByDefault="true" level="ERROR"
-                     implementationClass="dev.kierat.plugins.openjml.inspections.GherkinScenarioToScenarioOutlineInspection"/>
-                     -->
+        <applicationService serviceImplementation="dev.kierat.plugins.openjml.settings.OpenJMLSettings"/>
+    </extensions>
 
-<!--
-    <completion.contributor
-      language="JML"
-      implementationClass="dev.kierat.plugins.openjml.completion.OpenJMLCompletionContributor"/>
+    <actions>
+        <action id="GoToJMLSpecificationAction"
+                class="dev.kierat.plugins.openjml.action.GoToJMLSpecificationAction"
+                text="Go to Specification"
+                description="Open the JML specification for this Java file">
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="after" relative-to-action="RunClass" />
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt 0"/>
+        </action>
+        <action id="RunOpenJMLAction"
+                class="dev.kierat.plugins.openjml.action.RunOpenJMLEscAction"
+                text="Verify with OpenJML"
+                description="Run OpenJML ESC on selected Java class or package"
+                icon="AllIcons.Actions.Execute">
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="after" relative-to-action="GoToJMLSpecificationAction" />
+            <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="RunClass" />
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl shift 0"/>
+        </action>
+    </actions>
 
-    <enterHandlerDelegate implementation="dev.kierat.plugins.openjml.codeinsight.OpenJMLEnterHandler"/>
-    <typedHandler implementation="dev.kierat.plugins.openjml.codeinsight.JMLTypedHandler"/>
-
-    <spellchecker.support
-      language="JML"
-      implementationClass="dev.kierat.plugins.openjml.spellchecker.JMLSpellcheckerStrategy"/>
-    <lang.inspectionSuppressor
-      language="JML"
-      implementationClass="dev.kierat.plugins.openjml.inspections.model.GherkinInspectionSuppressor"/>
-
-    <liveTemplateContext
-      contextId="CUCUMBER_FEATURE_FILE"
-      implementation="dev.kierat.plugins.openjml.GherkinLiveTemplateContextType"/>
-
-    <extendWordSelectionHandler
-      implementation="dev.kierat.plugins.openjml.actions.GherkinStepParameterSelectioner"/>
-
-    <gotoRelatedProvider
-      implementation="dev.kierat.plugins.openjml.navigation.CucumberGoToRelatedProvider"/>
-
-    <renameHandler
-      implementation="dev.kierat.plugins.openjml.psi.refactoring.rename.GherkinParameterRenameHandler"/>
-    <renameHandler
-      implementation="dev.kierat.plugins.openjml.psi.refactoring.rename.GherkinStepRenameHandler"/>
-
-
-    <renamePsiElementProcessor
-      implementation="dev.kierat.plugins.openjml.psi.refactoring.rename.GherkinStepRenameProcessor"
-      order="first"/>
-
-    <additionalTextAttributes
-      scheme="Default"
-      file="colorSchemes/JMLDefault.xml"/>
-    <additionalTextAttributes
-      scheme="Darcula"
-      file="colorSchemes/JMLDarcula.xml"/>
-
-    <runLineMarkerContributor
-      id="scenarioRunLineMarkerContributor"
-      language="JML"
-      implementationClass="dev.kierat.plugins.openjml.run.OpenJMLRunLineMarkerContributor"/>
--->
-
-    <intentionAction>
-      <language>JAVA</language>
-      <className>dev.kierat.plugins.openjml.intentions.GenerateJMLFileIntention</className>
-      <categoryKey>intention.family.name.openjml</categoryKey>
-    </intentionAction>
-<!--
-    <multiHostInjector
-      implementation="dev.kierat.plugins.openjml.injector.JMLLanguageInjector"/>
-    <lang.elementManipulator
-      forClass="dev.kierat.plugins.openjml.psi.GherkinPystring"
-      implementationClass="dev.kierat.plugins.openjml.GherkinPyStringManipulator"/>
--->
-  </extensions>
-
-  <extensionPoints>
-    <extensionPoint
-      qualifiedName="dev.kierat.plugins.openjml.openjmlExtensionPoint"
-      interface="dev.kierat.plugins.openjml.OpenJMLExtensionPoint"
-      dynamic="true"/>
-    <extensionPoint
-      qualifiedName="dev.kierat.plugins.openjml.injector.injectorExtensionPoint"
-      interface="dev.kierat.plugins.openjml.injector.JMLInjectorExtensionPoint"
-      dynamic="true"/>
-  </extensionPoints>
+    <extensionPoints>
+        <extensionPoint
+                qualifiedName="dev.kierat.plugins.openjml.openjmlExtensionPoint"
+                interface="dev.kierat.plugins.openjml.OpenJMLExtensionPoint"
+                dynamic="true"/>
+    </extensionPoints>
 </idea-plugin>
