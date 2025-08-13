@@ -1,18 +1,28 @@
 package dev.kierat.plugins.openjml.psi.impl;
 
+import com.intellij.lang.Language;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.source.PsiFileImpl;
-import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.psi.impl.source.PsiJavaFileBaseImpl;
 import dev.kierat.plugins.openjml.psi.JMLFileType;
+import dev.kierat.plugins.openjml.psi.JMLLanguage;
 import dev.kierat.plugins.openjml.psi.JMLParserDefinition;
 import dev.kierat.plugins.openjml.psi.PsiJMLFile;
+import dev.kierat.plugins.openjml.utils.JMLElementUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class PsiJMLFileImpl extends PsiFileImpl implements PsiJMLFile {
+import java.util.function.UnaryOperator;
+
+public class PsiJMLFileImpl extends PsiJavaFileBaseImpl implements PsiJMLFile {
 
     public PsiJMLFileImpl(@NotNull FileViewProvider viewProvider) {
         super(JMLParserDefinition.JML_FILE, JMLParserDefinition.JML_FILE, viewProvider);
+    }
+
+    @Override
+    public @NotNull Language getLanguage() {
+        return JMLLanguage.INSTANCE;
     }
 
     @Override
@@ -25,21 +35,14 @@ public class PsiJMLFileImpl extends PsiFileImpl implements PsiJMLFile {
         visitor.visitFile(this);
     }
 
-    public @NotNull PsiClass[] getClasses() {
-        return PsiTreeUtil.getChildrenOfType(this, PsiClass.class);
+    @Override
+    public @Nullable PsiElement findElement(@NotNull PsiElement element) {
+        return JMLElementUtil.findElement(this, element);
     }
 
-    public PsiPackageStatement getPackageStatement() {
-        return PsiTreeUtil.getChildOfType(this, PsiPackageStatement.class);
-    }
-
-    public String getPackageName() {
-        PsiPackageStatement statement = getPackageStatement();
-        return statement != null ? statement.getPackageName() : "";
-    }
-
-    public PsiImportList getImportList() {
-        return PsiTreeUtil.getChildOfType(this, PsiImportList.class);
+    public @NotNull PsiElement findOrCreateElement(@NotNull PsiElement element,
+                                                   @NotNull UnaryOperator<PsiElement> elementFactory) {
+        return JMLElementUtil.findOrCreateElement(this, element, elementFactory);
     }
 
     @Override

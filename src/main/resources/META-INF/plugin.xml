@@ -5,10 +5,9 @@
     <description><![CDATA[
   ]]>
     </description>
+    <depends>com.intellij.modules.java</depends>
     <depends>com.intellij.modules.xml</depends>
-    <!--  <depends>com.intellij.modules.spellchecker</depends>-->
     <depends>org.intellij.intelliLang</depends>
-    <!--  <depends>com.intellij.modules.regexp</depends>-->
     <resource-bundle>messages.OpenJMLBundle</resource-bundle>
     <vendor>Pawel Kierat</vendor>
 
@@ -36,15 +35,40 @@
                 displayName="OpenJML"
                 instance="dev.kierat.plugins.openjml.settings.OpenJMLSettingsConfigurable"/>
 
+        <lang.formatter
+                language="JML"
+                implementationClass="dev.kierat.plugins.openjml.formatting.JMLFormattingModelBuilder"/>
+        <defaultHighlightingSettingProvider
+                implementationClass="dev.kierat.plugins.openjml.highlighting.JMLHighlightingSettingProvider"/>
+
         <gotoRelatedProvider implementation="dev.kierat.plugins.openjml.navigation.GotoJmlRelatedProvider"/>
+        <codeInsight.lineMarkerProvider
+                language="JAVA"
+                implementationClass="dev.kierat.plugins.openjml.navigation.JMLLineMarkerProvider"/>
+        <codeInsight.inlayProvider
+                language="JAVA"
+                implementationClass="dev.kierat.plugins.openjml.hints.JMLInlayHintsProvider"/>
 
         <annotator language="JAVA" implementationClass="dev.kierat.plugins.openjml.annotator.JMLAnnotator"/>
         <annotator language="JML" implementationClass="dev.kierat.plugins.openjml.annotator.JMLAnnotator"/>
 
-        <highlightVisitor language="JML"
-                          implementationClass="dev.kierat.plugins.openjml.inspection.JMLHighlightVisitor"/>
-
         <applicationService serviceImplementation="dev.kierat.plugins.openjml.settings.OpenJMLSettings"/>
+
+        <intentionAction>
+            <language>JAVA</language>
+            <className>dev.kierat.plugins.openjml.intention.AddFieldSpecificationIntention</className>
+            <categoryKey>intention.family.name.openjml</categoryKey>
+        </intentionAction>
+        <intentionAction>
+            <language>JAVA</language>
+            <className>dev.kierat.plugins.openjml.intention.AddMethodSpecificationIntention</className>
+            <categoryKey>intention.family.name.openjml</categoryKey>
+        </intentionAction>
+        <intentionAction>
+            <language>JAVA</language>
+            <className>dev.kierat.plugins.openjml.intention.AddClassSpecificationIntention</className>
+            <categoryKey>intention.family.name.openjml</categoryKey>
+        </intentionAction>
     </extensions>
 
     <actions>
@@ -52,7 +76,7 @@
                 class="dev.kierat.plugins.openjml.action.GoToJMLSpecificationAction"
                 text="Go to Specification"
                 description="Open the JML specification for this Java file">
-            <add-to-group group-id="ProjectViewPopupMenu" anchor="after" relative-to-action="RunClass" />
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="after" relative-to-action="RunClass"/>
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
             <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt 0"/>
         </action>
@@ -61,8 +85,9 @@
                 text="Verify with OpenJML"
                 description="Run OpenJML ESC on selected Java class or package"
                 icon="AllIcons.Actions.Execute">
-            <add-to-group group-id="ProjectViewPopupMenu" anchor="after" relative-to-action="GoToJMLSpecificationAction" />
-            <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="RunClass" />
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="after"
+                          relative-to-action="GoToJMLSpecificationAction"/>
+            <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="RunClass"/>
             <keyboard-shortcut keymap="$default" first-keystroke="ctrl shift 0"/>
         </action>
     </actions>

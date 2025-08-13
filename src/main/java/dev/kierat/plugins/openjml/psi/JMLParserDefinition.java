@@ -1,5 +1,6 @@
 package dev.kierat.plugins.openjml.psi;
 
+import com.intellij.lang.ASTFactory;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.ParserDefinition;
 import com.intellij.lang.PsiParser;
@@ -8,16 +9,19 @@ import com.intellij.lexer.Lexer;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.LanguageLevelProjectExtension;
 import com.intellij.pom.java.LanguageLevel;
-import com.intellij.psi.*;
+import com.intellij.psi.FileViewProvider;
+import com.intellij.psi.JavaTokenType;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.impl.source.tree.LeafElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;
 import dev.kierat.plugins.openjml.psi.impl.PsiJMLFileImpl;
-import dev.kierat.plugins.openjml.psi.impl.PsiSpecificationImpl;
+import dev.kierat.plugins.openjml.psi.impl.PsiJMLSpecificationImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class JMLParserDefinition implements ParserDefinition {
+public class JMLParserDefinition extends ASTFactory implements ParserDefinition {
 
     public static final IFileElementType JML_FILE = new IFileElementType(JMLLanguage.INSTANCE);
 
@@ -25,18 +29,13 @@ public class JMLParserDefinition implements ParserDefinition {
 
     @Override
     public @NotNull Lexer createLexer(@Nullable Project project) {
-        LanguageLevel level = getLanguageLevel(project);
-        return createLexer(level);
+        return javaParserDefinition.createLexer(project);
     }
 
     private static LanguageLevel getLanguageLevel(@Nullable Project project) {
         return project != null
                 ? LanguageLevelProjectExtension.getInstance(project).getLanguageLevel()
                 : LanguageLevel.HIGHEST;
-    }
-
-    public static @NotNull Lexer createLexer(@NotNull LanguageLevel level) {
-        return new JMLAwareJavaLexer(level);
     }
 
     @Override
@@ -51,12 +50,7 @@ public class JMLParserDefinition implements ParserDefinition {
 
     @Override
     public @NotNull TokenSet getCommentTokens() {
-        return TokenSet.create(
-                JavaTokenType.END_OF_LINE_COMMENT,
-                JavaTokenType.C_STYLE_COMMENT,
-                JMLTokenTypes.JML_LINE_COMMENT,
-                JMLTokenTypes.JML_BLOCK_COMMENT
-        );
+        return javaParserDefinition.getCommentTokens();
     }
 
     @Override
@@ -65,23 +59,8 @@ public class JMLParserDefinition implements ParserDefinition {
     }
 
     @Override
-    public @NotNull PsiElement createElement(@NotNull ASTNode node) {
-        //TODO: Make the parser call this method
-        IElementType type = node.getElementType();
-        if (type == JMLTokenTypes.JML_LINE_COMMENT || type == JMLTokenTypes.JML_BLOCK_COMMENT) {
-            return new PsiSpecificationImpl(node);
-        } else {
-            PsiElement element = javaParserDefinition.createElement(node);
-            if (element instanceof PsiClass psiClass) {
-                return PsiSpecificationOwner.of(psiClass, PsiClass.class, null);
-            } else if (element instanceof PsiField psiField) {
-                return PsiSpecificationOwner.of(psiField, PsiField.class, null);
-            } else if (element instanceof PsiMethod psiMethod) {
-                return PsiSpecificationOwner.of(psiMethod, PsiMethod.class, null);
-            } else {
-                return element;
-            }
-        }
+    public @NotNull PsiElement createElement(ASTNode node) {
+        return javaParserDefinition.createElement(node);
     }
 
     @Override
@@ -92,5 +71,14 @@ public class JMLParserDefinition implements ParserDefinition {
     @Override
     public @NotNull TokenSet getStringLiteralElements() {
         return javaParserDefinition.getStringLiteralElements();
+    }
+
+    @Override
+    public LeafElement createLeaf(@NotNull IElementType type, @NotNull CharSequence text) {
+        if ((type == JavaTokenType.END_OF_LINE_COMMENT && text.charAt(2) == '@')
+                || (type == JavaTokenType.C_STYLE_COMMENT && text.charAt(2) == '@')) {
+            return new PsiJMLSpecificationImpl(PsiJMLSpecification.Type.of(type), text);
+        }
+        return null;
     }
 }

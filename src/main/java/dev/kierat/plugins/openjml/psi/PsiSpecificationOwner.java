@@ -8,9 +8,9 @@ import java.lang.reflect.Proxy;
 
 public interface PsiSpecificationOwner extends PsiElement {
 
-    PsiSpecification getSpecification();
+    PsiJMLSpecification getSpecification();
 
-    static <E extends PsiElement> E of(E element, Class<E> elementInterface, PsiSpecification specification) {
+    static <E extends PsiElement> E of(E element, Class<E> elementInterface, PsiJMLSpecification specification) {
 
         return elementInterface.cast(Proxy.newProxyInstance(
                 PsiSpecificationOwner.class.getClassLoader(),
@@ -22,9 +22,9 @@ public interface PsiSpecificationOwner extends PsiElement {
     class PsiSpecificationAwareElementImpl implements InvocationHandler {
 
         private final PsiElement psiElement;
-        private final PsiSpecification psiSpecification;
+        private final PsiJMLSpecification psiSpecification;
 
-        public PsiSpecificationAwareElementImpl(PsiElement psiElement, PsiSpecification psiSpecification) {
+        public PsiSpecificationAwareElementImpl(PsiElement psiElement, PsiJMLSpecification psiSpecification) {
             this.psiElement = psiElement;
             this.psiSpecification = psiSpecification;
         }
